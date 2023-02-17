@@ -23,7 +23,7 @@ interface ErrorCallback {
 
 class FlutterFirebaseMessagingUtils {
   static final String IS_AUTO_INIT_ENABLED = "isAutoInitEnabled";
-  static final String SHARED_PREFERENCES_KEY = "io.flutter.firebase.messaging.callback";
+  static final String SHARED_PREFERENCES_KEY = "FlutterSharedPreferences";
   static final String ACTION_REMOTE_MESSAGE = "io.flutter.plugins.firebase.messaging.NOTIFICATION";
   static final String EXTRA_REMOTE_MESSAGE = "notification";
   static final String ACTION_TOKEN = "io.flutter.plugins.firebase.messaging.TOKEN";

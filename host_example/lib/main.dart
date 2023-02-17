@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 //import 'firebase_options.dart';
 import 'message.dart';
@@ -116,10 +117,11 @@ void showFlutterNotification(RemoteMessage message) {
 
 /// Initialize the [FlutterLocalNotificationsPlugin] package.
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
+late  SharedPreferences pref ;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  pref =  await SharedPreferences.getInstance();
   // Set the background messaging handler early on, as a named top-level function
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -201,23 +203,26 @@ class _Application extends State<Application> {
   }
 
   Future<void> sendPushMessage() async {
-    if (_token == null) {
-      print('Unable to send FCM message, no token exists.');
-      return;
-    }
+     final value = pref.getString('noti');
+     print(value);
+    // if (_token == null) {
+     
+    //   print('Unable to send FCM message, no token exists.');
+    //   return;
+    // }
 
-    try {
-      await http.post(
-        Uri.parse('https://api.rnfirebase.io/messaging/send'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        body: constructFCMPayload(_token),
-      );
-      print('FCM request for device sent!');
-    } catch (e) {
-      print(e);
-    }
+    // try {
+    //   await http.post(
+    //     Uri.parse('https://api.rnfirebase.io/messaging/send'),
+    //     headers: <String, String>{
+    //       'Content-Type': 'application/json; charset=UTF-8',
+    //     },
+    //     body: constructFCMPayload(_token),
+    //   );
+    //   print('FCM request for device sent!');
+    // } catch (e) {
+    //   print(e);
+    // }
   }
 
   Future<void> onActionSelected(String value) async {
