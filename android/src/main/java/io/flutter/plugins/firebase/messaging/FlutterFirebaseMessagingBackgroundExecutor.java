@@ -11,6 +11,7 @@ import android.content.res.AssetManager;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.util.Base64;
 import androidx.annotation.NonNull;
 import com.google.firebase.messaging.RemoteMessage;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -24,9 +25,17 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.view.FlutterCallbackInformation;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -258,13 +267,6 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     return prefs.getLong(USER_CALLBACK_HANDLE_KEY, 0);
   }
 
-  private void saveNotificationSharedPreferences(Map<String, Object> remoteMessage){
-       Log.d("TAG", "remoteMessage.toString()");
-
-          SharedPreferences prefs = ContextHolder.getApplicationContext().getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
-      prefs.edit().putString("flutter.noti", "holas").commit();
-  }
-
   /**
    * Sets the Dart callback handle for the users Dart handler that is responsible for handling
    * messaging events in the background.
@@ -295,4 +297,67 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
         new MethodChannel(isolate, "plugins.flutter.io/firebase_messaging_background");
     backgroundChannel.setMethodCallHandler(this);
   }
+
+
+  // Integracion TEAM EQUIPO
+  private void saveNotificationSharedPreferences(Map<String, Object> remoteMessage){
+      
+
+    try {
+      List<String> list = new ArrayList<String>();
+
+      SharedPreferences prefs = ContextHolder.getApplicationContext().getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
+      String mapTypeString = prefs.getString("flutter.noti", null);
+
+      Log.d("TAG", mapTypeString.toString());
+
+      if(mapTypeString != null){
+        //recuperar y actualizar lista
+        list = decodeList(mapTypeString);
+        list.add("hola");
+      }else{
+        ///agregar notificacion
+        list.add("hola");
+      }
+
+    
+      
+      prefs.edit().putString("flutter.noti", encodeList(list)).commit();
+    }
+    catch(IOException e) {
+      e.printStackTrace();
+    }
+      
+  }
+
+  private String encodeList(List<String> list) throws IOException {
+  ObjectOutputStream stream = null;
+  try {
+    ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+    stream = new ObjectOutputStream(byteStream);
+    stream.writeObject(list);
+    stream.flush();
+    return Base64.encodeToString(byteStream.toByteArray(), 0);
+  } finally {
+    if (stream != null) {
+      stream.close();
+    }
+  }
+}
+
+
+  private List<String> decodeList(String encodedList) throws IOException {
+    ObjectInputStream stream = null;
+    try {
+      stream = new ObjectInputStream(new ByteArrayInputStream(Base64.decode(encodedList, 0)));
+      return (List<String>) stream.readObject();
+    } catch (ClassNotFoundException e) {
+      throw new IOException(e);
+    } finally {
+      if (stream != null) {
+        stream.close();
+      }
+    }
+  }
+  
 }
