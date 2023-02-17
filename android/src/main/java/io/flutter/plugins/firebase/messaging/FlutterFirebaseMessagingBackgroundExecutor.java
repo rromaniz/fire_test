@@ -233,12 +233,7 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
     if (remoteMessage != null) {      
       Map<String, Object> remoteMessageMap =
           FlutterFirebaseMessagingUtils.remoteMessageToMap(remoteMessage);
-      Log.d("TAG", "remoteMessage.toString()");
-
-          SharedPreferences prefs = ContextHolder.getApplicationContext().getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
-      prefs.edit().putString("noti", "hola").apply();
-      String seguardo = prefs.getString("noti",null);
-      Log.d("TAG", seguardo);
+      saveNotificationSharedPreferences(remoteMessageMap);
       backgroundChannel.invokeMethod(
           "MessagingBackground#onMessage",
           new HashMap<String, Object>() {
@@ -261,6 +256,13 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
         ContextHolder.getApplicationContext()
             .getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
     return prefs.getLong(USER_CALLBACK_HANDLE_KEY, 0);
+  }
+
+  private void saveNotificationSharedPreferences(Map<String, Object> remoteMessage){
+       Log.d("TAG", "remoteMessage.toString()");
+
+          SharedPreferences prefs = ContextHolder.getApplicationContext().getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
+      prefs.edit().putString("flutter.noti", "holas").commit();
   }
 
   /**

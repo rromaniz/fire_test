@@ -204,6 +204,7 @@ class _Application extends State<Application> {
 
   Future<void> sendPushMessage() async {
      final value = pref.getString('noti');
+     pref.setString('asdasd', 'values');
      print(value);
     // if (_token == null) {
      
