@@ -23,9 +23,9 @@ apply plugin: 'com.android.library'
 
 def firebaseCoreProject = findProject(':firebase_core')
 if (firebaseCoreProject == null) {
-  throw new GradleException('Could not find the firebase_core FlutterFire plugin, have you added it as a dependency in your pubspec?')
+  throw GradleException('Could not find the firebase_core FlutterFire plugin, have you added it as a dependency in your pubspec?')
 } else if (!firebaseCoreProject.properties['FirebaseSDKVersion']) {
-  throw new GradleException('A newer version of the firebase_core FlutterFire plugin is required, please update your firebase_core pubspec dependency.')
+  throw  GradleException('A newer version of the firebase_core FlutterFire plugin is required, please update your firebase_core pubspec dependency.')
 }
 
 def getRootProjectExtOrCoreProperty(name, firebaseCoreProject) {
@@ -53,7 +53,6 @@ android {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
     implementation 'androidx.annotation:annotation:1.4.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
     implementation ('com.google.firebase:firebase-iid:21.1.0') {
       transitive = true
     }

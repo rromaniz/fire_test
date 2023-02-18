@@ -302,20 +302,27 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   // Integracion TEAM EQUIPO
   private void saveNotificationSharedPreferences(Map<String, Object> remoteMessage){
       
-
+    Log.d("TAG", "fuera try catch");
     try {
+      Log.d("TAG", "dentro try catch");
       List<String> list = new ArrayList<String>();
 
       SharedPreferences prefs = ContextHolder.getApplicationContext().getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
+      Log.d("TAG", "se obtuvo valor 1");
       String mapTypeString = prefs.getString("flutter.noti", null);
+      Log.d("TAG", "se obtuvo valor");
 
-      Log.d("TAG", mapTypeString.toString());
+      //Log.d("TAG", mapTypeString.toString());
 
       if(mapTypeString != null){
+        Log.d("TAG", mapTypeString.toString());
         //recuperar y actualizar lista
         list = decodeList(mapTypeString);
+          //System.out.println(list.length());
+         Log.d("TAG", list.toString());
         list.add("hola");
       }else{
+        Log.d("TAG", "no tenia valor");
         ///agregar notificacion
         list.add("hola");
       }
