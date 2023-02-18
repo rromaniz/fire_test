@@ -28,6 +28,7 @@ import io.flutter.view.FlutterCallbackInformation;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import org.json.JSONObject;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
@@ -318,11 +319,11 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
         //recuperar y actualizar lista
         list = decodeList(mapTypeString.substring(LIST_IDENTIFIER.length()));
           //System.out.println(list.length());        
-        list.add("hola");
+        list.add(new JSONObject(remoteMessage).toString());
       }else{
         Log.d("TAG", "no tenia valor");
         ///agregar notificacion
-        list.add("hola");
+        list.add(new JSONObject(remoteMessage).toString());
       }
 
       Log.d("TAG", list.toString());
