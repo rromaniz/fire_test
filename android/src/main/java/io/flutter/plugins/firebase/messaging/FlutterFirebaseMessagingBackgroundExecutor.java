@@ -314,12 +314,10 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
 
       //Log.d("TAG", mapTypeString.toString());
 
-      if(mapTypeString != null){
-        Log.d("TAG", mapTypeString.toString());
+      if(mapTypeString != null){        
         //recuperar y actualizar lista
-        list = decodeList(mapTypeString);
-          //System.out.println(list.length());
-         Log.d("TAG", list.toString());
+        list = decodeList(mapTypeString.substring(LIST_IDENTIFIER.length()));
+          //System.out.println(list.length());        
         list.add("hola");
       }else{
         Log.d("TAG", "no tenia valor");
@@ -327,15 +325,20 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
         list.add("hola");
       }
 
+      Log.d("TAG", list.toString());
+
     
       
-      prefs.edit().putString("flutter.noti", encodeList(list)).commit();
+      prefs.edit().putString("flutter.noti", LIST_IDENTIFIER + encodeList(list)).commit();
     }
     catch(IOException e) {
       e.printStackTrace();
     }
       
   }
+
+
+  private static final String LIST_IDENTIFIER = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIGxpc3Qu";
 
   private String encodeList(List<String> list) throws IOException {
   ObjectOutputStream stream = null;

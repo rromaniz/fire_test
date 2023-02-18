@@ -11,6 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:host_example/utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -175,6 +176,7 @@ class Application extends StatefulWidget {
 class _Application extends State<Application> {
   String? _token;
   String? initialMessage;
+  String numNotification = '0';
   bool _resolved = false;
 
   @override
@@ -203,11 +205,18 @@ class _Application extends State<Application> {
   }
 
   Future<void> sendPushMessage() async {
-     final value = pref.getString('noti');
-     pref.setString('asdasd', 'values');
-     print(value);
+    await pref.reload();
+
+    final value = pref.getStringList('noti');
+
+    
+      if(value != null){    
+        numNotification = value.length.toString();    
+      }
+    
+
     // if (_token == null) {
-     
+
     //   print('Unable to send FCM message, no token exists.');
     //   return;
     // }
@@ -224,6 +233,9 @@ class _Application extends State<Application> {
     // } catch (e) {
     //   print(e);
     // }
+    setState(() {
+      
+    });
   }
 
   Future<void> onActionSelected(String value) async {
@@ -345,6 +357,7 @@ class _Application extends State<Application> {
               child: const Text('getInitialMessage()'),
             ),
             MetaCard('Message Stream', MessageList()),
+            MetaCard('Notificaciones ', Text(numNotification)),
           ],
         ),
       ),
