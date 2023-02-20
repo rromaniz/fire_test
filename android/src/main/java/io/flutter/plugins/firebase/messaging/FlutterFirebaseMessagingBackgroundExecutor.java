@@ -301,46 +301,30 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
 
 
   // Integracion TEAM EQUIPO
-  private void saveNotificationSharedPreferences(Map<String, Object> remoteMessage){
-      
-    Log.d("TAG", "fuera try catch");
+  private void saveNotificationSharedPreferences(Map<String, Object> remoteMessage){          
     try {
-      Log.d("TAG", "dentro try catch");
       List<String> list = new ArrayList<String>();
-
       SharedPreferences prefs = ContextHolder.getApplicationContext().getSharedPreferences(FlutterFirebaseMessagingUtils.SHARED_PREFERENCES_KEY, 0);
-      Log.d("TAG", "se obtuvo valor 1");
-      String mapTypeString = prefs.getString("flutter.noti", null);
-      Log.d("TAG", "se obtuvo valor");
-
-      //Log.d("TAG", mapTypeString.toString());
-
+      String mapTypeString = prefs.getString("flutter.noti", null);      
       if(mapTypeString != null){        
         //recuperar y actualizar lista
-        list = decodeList(mapTypeString.substring(LIST_IDENTIFIER.length()));
-          //System.out.println(list.length());        
+        list = decodeList(mapTypeString.substring(LIST_IDENTIFIER.length()));              
         list.add(new JSONObject(remoteMessage).toString());
       }else{
-        Log.d("TAG", "no tenia valor");
         ///agregar notificacion
         list.add(new JSONObject(remoteMessage).toString());
       }
-
       Log.d("TAG", list.toString());
-
-    
-      
       prefs.edit().putString("flutter.noti", LIST_IDENTIFIER + encodeList(list)).commit();
     }
     catch(IOException e) {
       e.printStackTrace();
     }
-      
   }
 
-
+// Identificador de paquete sharedPreference ListString
   private static final String LIST_IDENTIFIER = "VGhpcyBpcyB0aGUgcHJlZml4IGZvciBhIGxpc3Qu";
-
+// EncondeList
   private String encodeList(List<String> list) throws IOException {
   ObjectOutputStream stream = null;
   try {
@@ -356,7 +340,7 @@ public class FlutterFirebaseMessagingBackgroundExecutor implements MethodCallHan
   }
 }
 
-
+// Decodelist
   private List<String> decodeList(String encodedList) throws IOException {
     ObjectInputStream stream = null;
     try {
